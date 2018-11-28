@@ -34,7 +34,7 @@ def hangman():
     global guesses
     global letters_lower
     word = choose_word(load_words())
-    print(word)
+    #print(word)
     guessing_word = ['_']*len(word)
     print ('Welcome to the game Hangman!\nI am thinking of a word that is'
            , len(word), 'letters long.\n------------') 
@@ -42,7 +42,6 @@ def hangman():
         print_out()
         letter = input('Please guess a letter: ').lower()
         assert letter in string.ascii_letters 
-#        letters_lower = letters_lower.replace(letter,'')
         if letter in word:
             for i in range(len(word)):
                 if word[i] == letter:
