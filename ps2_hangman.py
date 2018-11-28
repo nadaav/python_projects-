@@ -34,7 +34,7 @@ def hangman():
     global guesses
     global letters_lower
     word = choose_word(load_words())
-    print(word)
+    ##print(word)
     guessing_word = ['_']*len(word)
     print ('Welcome to the game Hangman!\nI am thinking of a word that is'
            , len(word), 'letters long.\n------------') 
