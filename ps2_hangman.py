@@ -59,4 +59,6 @@ def find_letter(guessing_word, word, letter):
 def print_out(guesses, letters_lower):
     print ('You have',
            guesses, 'guesses left. \nAvailable letters:', letters_lower)
+    
+hangman()
 
