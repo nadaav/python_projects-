@@ -28,14 +28,13 @@ def hangman():
     guesses = 8
     letters_lower = 'abcdefghijklmnopqrstuvwxyz'
     word = choose_word(load_words())
-    print(word)
     guessing_word = ['_']*len(word)
     print ('Welcome to the game Hangman!\nI am thinking of a word that is'
            , len(word), 'letters long.\n------------') 
     while guesses > 0 and '_' in guessing_word:
         print_out(guesses, letters_lower)
         letter = input('Please guess a letter: ').lower()
-        assert letter in string.ascii_letters 
+        assert letter in string.ascii_lowercase
         if letter in word:
             print('Good guess: ', find_letter(guessing_word, word, letter))
         else:
