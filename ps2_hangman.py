@@ -1,8 +1,5 @@
 import random
 import string
-import re
-
-WORDLIST_FILENAME = "words.txt"
 
 def load_words():
     """
@@ -10,55 +7,53 @@ def load_words():
     Depending on the size of the word list, this function may
     take a while to finish.
     """
-    print ("Loading word list from file...")
+    WORDLIST_FILENAME = "words.txt"
     inFile = open(WORDLIST_FILENAME, 'r')
     line = inFile.readline()
     wordlist = str.split(line)
-    print ("  ", len(wordlist), "words loaded.")
     return wordlist
 
-def choose_word(wordlist):
-    """
-    wordlist (list): list of words (strings)
-    Returns a word from wordlist at random
-    """
-    return random.choice(wordlist)
+# constants
+letters_lower = string.ascii_lowercase
+guesses = 8
 
-def hangman():
-    guesses = 8
-    letters_lower = 'abcdefghijklmnopqrstuvwxyz'
-    word = choose_word(load_words())
-    #print(word)
-    guessing_word = ['_']*len(word)
-    print ('Welcome to the game Hangman!\nI am thinking of a word that is'
-           , len(word), 'letters long.\n------------') 
-    while guesses > 0 and '_' in guessing_word:
-        print_out(guesses, letters_lower)
-        letter = input('Please guess a letter: ').lower()
-        assert letter in string.ascii_lowercase
-        if letter in word:
-            print('Good guess: ', find_letter(guessing_word, word, letter))
-        else:
-            if letter in letters_lower:
-                guesses -= 1
-                print('Oops! That letter was not on my mind:',''.join(guessing_word))
-            else:
-                print('You already used the letter', letter)
-        letters_lower = letters_lower.replace(letter,'')
-    guessing_word = ''.join(guessing_word)
-    if '_' not in guessing_word:
-        print('Congratulations, you won!')
-    if guesses == 0 and '_' in guessing_word:
-        print('Sorry, you lost! The word was', word)
+# select random word
+word = random.choice(load_words())
+# print(word)
 
-def find_letter(guessing_word, word, letter):
-    for match in re.finditer(letter, word):
-        a = match.start()
-        guessing_word[a] = letter
+guessing_word = ['_'] * len(word)
+print ('Welcome to the game Hangman!\nI am thinking of a word that is'
+       , len(word), 'letters long.\n------------')
+
+def find_letter(letter):
+    for i, v in enumerate(word):
+        if v == letter:
+            guessing_word[i] = letter
     return ''.join(guessing_word)
 
-def print_out(guesses, letters_lower):
-    print ('You have',
-           guesses, 'guesses left. \nAvailable letters:', letters_lower)
+def get_input():
+    letter = input('Please guess a letter: ').lower()
+    if len(letter) == 1 and letter in letters_lower:
+        return letter
+    else:
+        print('Only one letter that you did not try before.')
+        return get_input()
 
-hangman()
+# main loop
+while guesses > 0 and '_' in guessing_word:
+    print ('You have', guesses, 'guesses left. \nAvailable letters:', letters_lower)
+    letter = get_input()
+    if letter in word:
+        letters_lower = letters_lower.replace(letter,'')
+        print('Good guess: ', find_letter(letter))
+    else:
+        guesses-=1
+        letters_lower = letters_lower.replace(letter,'')
+        print('Oops! That letter was not on my mind:',''.join(guessing_word))
+
+guessing_word = ''.join(guessing_word)
+
+if '_' not in guessing_word:
+    print('Congratulations, you won!')
+if guesses == 0 and '_' in guessing_word:
+    print('Sorry, you lost! The word was', word)
